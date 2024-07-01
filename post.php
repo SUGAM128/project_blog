@@ -1,9 +1,6 @@
 <?php 
 session_start();
 include 'partials/header.php';
- // Start the session to access session variables
-
-
 
 if(isset($_GET['id'])){
     $id = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
@@ -32,7 +29,25 @@ if(isset($_GET['id'])){
     die();
 }
 
+// Function to handle post reporting
+if (isset($_POST['report'])) {
+    $report_reason = mysqli_real_escape_string($connection, $_POST['report_reason']);
+    $report_author_id = $_SESSION['user-id'];
 
+    // Insert the report into database
+    $report_query = "INSERT INTO reports (post_id, reported_by, reason) VALUES ($id, $report_author_id, '$report_reason')";
+    $report_result = mysqli_query($connection, $report_query);
+
+    if ($report_result) {
+        $_SESSION['report_success'] = "Post reported successfully.";
+    } else {
+        $_SESSION['report_error'] = "Failed to report the post.";
+    }
+
+    // Redirect back to the same page
+    header("Location: {$_SERVER['PHP_SELF']}?id=$id");
+    exit();
+}
 ?>
 
 <section class="singlepost">
@@ -54,6 +69,7 @@ if(isset($_GET['id'])){
         </div>
         <p><?=$post['body']?></p>
 
+
         <!-- Comments Section -->
         <section class="comments">
             <h3>Comments</h3>
@@ -62,10 +78,9 @@ if(isset($_GET['id'])){
                     <div class="comment">
                         <div class="comment-author">
                             <strong><?= $comment['author_name'] ?></strong> on <?=date("M d, Y - H:i", strtotime($comment['date_time']))?>
-                            <!-- <?= $comment[ 'body'] ?> -->
                         </div>
                         <div class="comment-body">
-                        <?= $comment[ 'body'] ?>
+                            <?= $comment['body'] ?>
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -74,28 +89,63 @@ if(isset($_GET['id'])){
             <?php endif; ?>
         </section>
 
+
         <section class="comment-form">
-                <h3>Leave a Comment</h3>
-                <?php if (isset($_SESSION['user-id'])): ?>
-    <form action="comment.php" method="post">
-        <input type="hidden" name="post_id" value="<?=$id?>">
-        <div class="form-group">
-            <label for="author_name">Name</label>
-            <input type="text" name="author_name" id="author_name" value="<?= isset($_SESSION['username']) ? $_SESSION['username'] : '' ?>" required readonly>
-        </div>
-        <div class="form-group">
-            <label for="body">Comment</label>
-            <input type="text" name="body" id="body" required></input>
-        </div>
-        <button type="submit" name="submit" class="btn">Submit</button>
-    </form>
-<?php else: ?>
-    <p>You need to <a href="signin.php">log in</a> to comment.</p>
-<?php endif; ?>
-            </section>
+            <h3>Leave a Comment</h3>
+            <?php if (isset($_SESSION['user-id'])): ?>
+                <form action="comment.php" method="post">
+                    <input type="hidden" name="post_id" value="<?=$id?>">
+                    <div class="form-group">
+                        <label for="author_name">Name</label>
+                        <input type="text" name="author_name" id="author_name" value="<?= isset($_SESSION['username']) ? $_SESSION['username'] : '' ?>" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="body">Comment</label>
+                        <input type="text" name="body" id="body" required></input>
+                    </div>
+                    <button type="submit" name="submit" class="btn">Submit</button>
+                </form>
+            <?php else: ?>
+                <p>You need to <a href="signin.php">log in</a> to comment.</p>
+            <?php endif; ?>
+        </section>
+          <!-- Report Post Section -->
+          <section class="report-post">
+            <div class="toggle-report">
+                <button id="toggle-report-btn" class="btn">Report Post</button>
+            </div>
+            <div id="report-form" style="display: none;">
+                <h3>Report This Post</h3>
+                <form action="<?= $_SERVER['PHP_SELF'] ?>?id=<?= $id ?>" method="post">
+                    <div class="form-group">
+                        <label for="report_reason">Reason for Reporting:</label>
+                        <textarea name="report_reason" id="report_reason" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" name="report" class="btn">Report</button>
+                </form>
+
+                <?php if (isset($_SESSION['report_success'])): ?>
+                    <p class="success-message"><?=$_SESSION['report_success']?></p>
+                    <?php unset($_SESSION['report_success']); ?>
+                <?php elseif (isset($_SESSION['report_error'])): ?>
+                    <p class="error-message"><?=$_SESSION['report_error']?></p>
+                    <?php unset($_SESSION['report_error']); ?>
+                <?php endif; ?>
+            </div>
         </section>
     </div>
 </section>
+
+<script>
+    document.getElementById('toggle-report-btn').addEventListener('click', function() {
+        var reportForm = document.getElementById('report-form');
+        if (reportForm.style.display === 'none') {
+            reportForm.style.display = 'block';
+        } else {
+            reportForm.style.display = 'none';
+        }
+    });
+</script>
 
 <?php
 include 'partials/footer.php';

@@ -56,7 +56,7 @@
     </div>
 
     <div class="footer__copyright">
-        <small>Copyright &copy; UnderEmployed</small>
+        <small>Copyright &copy; Samachar</small>
     </div>
   </footer>
 
