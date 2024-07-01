@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
 
             // Prepare the email
             $subject = "Your post has been approved";
-            $message = "Dear User,\n\nWe are pleased to inform you that your post titled '$post_title' has been approved by our review team and is now live on our site.\n\nThank you for your contribution.\n\nBest regards,\nYour Team";
+            $message = "Dear User,\n\nWe are pleased to inform you that your post titled '$post_title' has been approved by our review team and is now live on our site.\n\nThank you for your contribution.\n\nBest regards,\nSamachar";
             $Mailer->smtp_mailer($user_email, $subject, $message);
             
     //         // Send the email

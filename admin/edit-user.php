@@ -22,8 +22,8 @@ if(isset($_GET['id'])){
 
         <form action="<?=ROOT_URL?>admin/edit-user-logic.php" enctype="multipart/form-data" method ="POST">
         <input type="hidden" value="<?=$id?>" name='id'>
-            <input type="text" name ="firstname" value="<?= $user['firstname'] ?>"  placeholder="First Name">
-            <input type="text" name ="lastname"  value="<?= $user['lastname'] ?>"   placeholder="Last Name">
+            <input type="text" name ="firstname" value="<?= $user['firstname'] ?>"  placeholder="First Name" readonly>
+            <input type="text" name ="lastname"  value="<?= $user['lastname'] ?>"   placeholder="Last Name" readonly>
 			<select name="userrole">
 				<option value="0">Author</option>
 				<option <?= $user['is_admin'] ? 'selected' : '' ?> value="1">Admin</option>

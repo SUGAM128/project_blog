@@ -5,6 +5,11 @@ include "partials/header.php";
 $current_user_id = $_SESSION['user-id'];
 $query = "SELECT id, title, category_id, status FROM posts WHERE status = 'pending' ORDER BY id DESC";
 $posts = mysqli_query($connection, $query);
+
+// Fetch number of pending posts
+$count_pending_posts_query = "SELECT COUNT(*) AS count FROM posts WHERE status = 'pending'";
+$count_pending_posts_result = mysqli_query($connection, $count_pending_posts_query);
+$count_pending_posts = mysqli_fetch_assoc($count_pending_posts_result)['count'];
 ?>
 
 <section class="dashboard">
@@ -12,7 +17,7 @@ $posts = mysqli_query($connection, $query);
     <?php if (isset($_SESSION['signin-success'])): ?>
         <div class="alert__message success container">
             <p>
-                <?=$_SESSION['signin-success'];
+                <?= $_SESSION['signin-success'];
                 unset($_SESSION['signin-success']);
                 ?>
             </p>
@@ -20,7 +25,7 @@ $posts = mysqli_query($connection, $query);
     <?php elseif (isset($_SESSION['add-post'])): ?>
         <div class="alert__message error container">
             <p>
-                <?=$_SESSION['add-post'];
+                <?= $_SESSION['add-post'];
                 unset($_SESSION['add-post']);
                 ?>
             </p>
@@ -28,7 +33,7 @@ $posts = mysqli_query($connection, $query);
     <?php elseif (isset($_SESSION['add-post-success'])): ?>
         <div class="alert__message success container">
             <p>
-                <?=$_SESSION['add-post-success'];
+                <?= $_SESSION['add-post-success'];
                 unset($_SESSION['add-post-success']);
                 ?>
             </p>
@@ -36,7 +41,7 @@ $posts = mysqli_query($connection, $query);
     <?php elseif (isset($_SESSION['edit-post'])): ?>
         <div class="alert__message error container">
             <p>
-                <?=$_SESSION['edit-post'];
+                <?= $_SESSION['edit-post'];
                 unset($_SESSION['edit-post']);
                 ?>
             </p>
@@ -44,7 +49,7 @@ $posts = mysqli_query($connection, $query);
     <?php elseif (isset($_SESSION['edit-post-success'])): ?>
         <div class="alert__message success container">
             <p>
-                <?=$_SESSION['edit-post-success'];
+                <?= $_SESSION['edit-post-success'];
                 unset($_SESSION['edit-post-success']);
                 ?>
             </p>
@@ -72,21 +77,23 @@ $posts = mysqli_query($connection, $query);
                 <li>
                     <a href="<?= ROOT_URL ?>admin/review-post.php" class="active">
                         <i class="uil uil-postcard"></i>
-                        <h5>Review Post</h5>
+                        <h5>Review Posts <?php echo "(<span class='pending-count'>$count_pending_posts</span>)"; ?></h5>
                     </a>
                 </li>
                 <?php if (isset($_SESSION['user_is_admin'])): ?>
                     <li>
-                        <a href="<?= ROOT_URL ?>admin/add-user.php">
-                            <i class="uil uil-user-plus"></i>
-                            <h5>Add User</h5>
+                        <a href="<?= ROOT_URL ?>admin/reports.php">
+                            <i class="uil uil-file-alt"></i>
+                            <h5>Reports</h5>
                         </a>
-                    </li>
+                    
                     <li>
                         <a href="<?= ROOT_URL ?>admin/manage-users.php">
                             <i class="uil uil-users-alt"></i>
                             <h5>Manage Users</h5>
                         </a>
+                    </li>
+                    
                     </li>
                     <li>
                         <a href="<?= ROOT_URL ?>admin/add-category.php">

@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
 
             // Prepare the email
             $subject = "Your post has been rejected";
-            $message = "Dear User,\n\nWe regret to inform you that your post titled '$post_title' has been rejected by our review team.\n\nThank you for your understanding.\n\nBest regards,\nYour Team";
+            $message = "Dear User,\n\nWe regret to inform you that your post titled '$post_title' has been rejected by our review team.\n\nThank you for your understanding.\n\nBest regards,\nSamachar";
             $Mailer->smtp_mailer($user_email, $subject, $message);
             // Send the email
 //             if (send_email($user_email, $subject, $message)) {

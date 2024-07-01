@@ -114,6 +114,7 @@ if (isset($_POST['report'])) {
             <div class="toggle-report">
                 <button id="toggle-report-btn" class="btn">Report Post</button>
             </div>
+            <?php if (isset($_SESSION['user-id'])): ?>
             <div id="report-form" style="display: none;">
                 <h3>Report This Post</h3>
                 <form action="<?= $_SERVER['PHP_SELF'] ?>?id=<?= $id ?>" method="post">
@@ -132,6 +133,10 @@ if (isset($_POST['report'])) {
                     <?php unset($_SESSION['report_error']); ?>
                 <?php endif; ?>
             </div>
+            <?php else: ?>
+                <p>You need to <a href="signin.php">log in</a> to report.</p>
+            <?php endif; ?>
+        </section>
         </section>
     </div>
 </section>

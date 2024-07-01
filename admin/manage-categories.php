@@ -74,12 +74,7 @@ $categories=mysqli_query($connection,$query)
                         </a>
                     </li>
                     <?php  if(isset($_SESSION['user_is_admin'])) : ?>
-                    <li>
-                        <a href="<?= ROOT_URL ?>admin/add-user.php">
-                            <i class="uil uil-user-plus"></i> 
-                            <h5>Add User</h5>
-                        </a>
-                    </li>  
+                   
     
                     <li>
                         <a href="<?= ROOT_URL ?>admin/manage-users.php">
